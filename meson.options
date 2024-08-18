@@ -1,0 +1,8 @@
+option(
+  'compile_dev_executable',
+  type: 'boolean',
+  value: false,
+  description: 'Whether to compile the development executable from the dev directory. ' +
+               'This uses XCB on Linux to create a window and draw on it using the Lumina library. ' +
+               'This is used for the developer\'s debugging purposes only.'
+)
