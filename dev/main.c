@@ -12,6 +12,7 @@
 
 #include "lumina.h" // IWYU pragma: keep
 #include "dev_font.h"
+#include "dev_symbol_font.h"
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -56,9 +57,19 @@ void render_callback(void)
     );
 
     lumina_graphics_render_text_aligned(
-        "Aligned Text Test",
-        (lumina_point_t) { 250, 30 },
+        "Symbols",
+        (lumina_point_t) { 250, 20 },
         &dev_font,
+        (lumina_font_style_t) { .text_color = 0x000000, .background_color = 0xffffff },
+        LUMINA_TEXT_ALIGNMENT_CENTER
+    );
+
+    lumina_graphics_render_text_aligned(
+        LUMINA_FONT_GLYPH_F00C
+        LUMINA_FONT_GLYPH_20
+        LUMINA_FONT_GLYPH_F04D,
+        (lumina_point_t) { 250, 35 },
+        &dev_symbol_font,
         (lumina_font_style_t) { .text_color = 0x000000, .background_color = 0xffffff },
         LUMINA_TEXT_ALIGNMENT_CENTER
     );

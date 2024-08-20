@@ -42,6 +42,7 @@ lumina_dependency = declare_dependency(
 if get_option('compile_dev_executable')
   lumina_dev_sources = [
     'dev/main.c',
+    'fonts/dev_symbol_font.c',
     'fonts/dev_font.c',
   ]
 
