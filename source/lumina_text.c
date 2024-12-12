@@ -13,8 +13,6 @@
 #include "lumina_text.h"
 #include "lumina_utf8.h"
 #include "lumina_driver.h"
-#include <math.h>
-#include <stdio.h>
 
 void lumina_render_glyph(
     const lumina_font_t *const font,
@@ -25,53 +23,51 @@ void lumina_render_glyph(
     const lumina_color_t background_color
 )
 {
-    const lumina_uint16_t inverse_bpp = 8.0 / font->bits_per_pixel;
-    const lumina_uint16_t pixel_bitmask = (1 << font->bits_per_pixel) - 1;
-
-    const lumina_uint16_t bitmap_size = floor((glyph_data->bounding_box_width * glyph_data->bounding_box_height) / (float) inverse_bpp);
+    const lumina_uint8_t pixel_bitmask = (1 << font->bits_per_pixel) - 1;
+    const lumina_uint16_t pixels_per_byte = 8.0f / font->bits_per_pixel;
+    const lumina_uint16_t data_length = (glyph_data->width * glyph_data->height * font->bits_per_pixel) >> 3;
+    const lumina_uint8_t *bitmap_start = &font->bitmap[glyph_data->bitmap_index];
+    const lumina_uint8_t pixel_chunk_start = (pixels_per_byte - 1) * font->bits_per_pixel;
 
     lumina_uint16_t row = 0;
     lumina_uint16_t column = 0;
 
-    for (lumina_uint16_t i = 0; i < bitmap_size; ++i)
+    for (lumina_uint16_t i = 0; i < data_length; ++i)
     {
-        const lumina_uint8_t glyph_byte = font->bitmap[glyph_data->bitmap_index + i];
-
-        for (lumina_uint16_t j = 0; j < inverse_bpp; ++j)
+        for (
+            lumina_int8_t pixel_chunk_index = pixel_chunk_start;
+            pixel_chunk_index >= 0;
+            pixel_chunk_index -= font->bits_per_pixel
+        )
         {
-            const lumina_uint8_t pixel_raw_value = (glyph_byte >> ((inverse_bpp - 1 - j) * font->bits_per_pixel)) & pixel_bitmask;
+            const lumina_uint8_t pixel = (bitmap_start[i] >> pixel_chunk_index) & pixel_bitmask;
 
-            if (pixel_raw_value == 0)
-            {
-                lumina_fill_area(x + column, y + 11 - glyph_data->bounding_box_height + row, 1, 1, background_color);
-            }
-
-            else if (pixel_raw_value == pixel_bitmask)
-            {
-                lumina_fill_area(x + column, y + 11 - glyph_data->bounding_box_height + row, 1, 1, foreground_color);
-            }
-
-            else
+            if (pixel != 0)
             {
                 lumina_fill_area(
                     x + column,
-                    y + 11 - glyph_data->bounding_box_height + row,
+                    y - glyph_data->height - glyph_data->y_bearing + row,
                     1,
                     1,
                     lumina_color_mix(
                         background_color,
                         foreground_color,
-                        (pixel_raw_value + 1) / ((lumina_float_t) pixel_bitmask + 1)
+                        pixel / (float) pixel_bitmask
                     )
                 );
             }
 
             ++column;
 
-            if (column % glyph_data->bounding_box_width == 0)
+            if (column == glyph_data->width)
             {
-                column = 0;
                 ++row;
+                column = 0;
+            }
+
+            if (row == glyph_data->height)
+            {
+                break;
             }
         }
     }
@@ -102,6 +98,6 @@ void lumina_render_text(
 
         lumina_render_glyph(font, glyph_data, pen_x, y, foreground_color, background_color);
 
-        pen_x += (glyph_data->advance_width >> 4);
+        pen_x += glyph_data->advance;
     }
 }

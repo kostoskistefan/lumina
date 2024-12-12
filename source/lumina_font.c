@@ -11,6 +11,7 @@
  */
 
 #include "lumina_font.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 const lumina_font_glyph_data_t *lumina_font_get_glyph_data(
@@ -39,18 +40,18 @@ const lumina_font_glyph_data_t *lumina_font_get_glyph_data(
 
         if (character_map->type == LUMINA_FONT_CHARACTER_MAP_TYPE_SPARSE)
         {
-            const lumina_uint32_t *const codepoint_index =
+            const lumina_utf8_unicode_codepoint_t *const codepoint_index =
                 bsearch(
-                    &relative_codepoint,
+                    &codepoint,
                     character_map->unicode_codepoints,
                     character_map->unicode_codepoints_count,
-                    sizeof(character_map->unicode_codepoints[0]),
+                    sizeof(lumina_utf8_unicode_codepoint_t),
                     lumina_utf8_unicode_codepoint_compare
                 );
 
             if (codepoint_index != NULL)
             {
-                const lumina_uint32_t index_offset = codepoint_index - character_map->unicode_codepoints;
+                const lumina_utf8_unicode_codepoint_t index_offset = codepoint_index - character_map->unicode_codepoints;
                 return &font->glyph_data[character_map->glyph_bitmap_start_index + index_offset];
             }
         }

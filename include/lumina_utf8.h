@@ -19,7 +19,7 @@ extern "C" {
 
 #include "lumina_types.h"
 
-typedef lumina_uint32_t lumina_utf8_unicode_codepoint_t;
+typedef lumina_uint16_t lumina_utf8_unicode_codepoint_t;
 
 typedef struct lumina_utf8_iterator_t
 {

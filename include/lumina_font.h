@@ -31,13 +31,12 @@ typedef struct lumina_font_glyph_data_t
 {
     const lumina_uint32_t bitmap_index;
 
-    const lumina_uint16_t advance_width;
+    const lumina_uint16_t advance;
 
-    const lumina_uint16_t bounding_box_width;
-    const lumina_uint16_t bounding_box_height;
+    const lumina_uint16_t width;
+    const lumina_uint16_t height;
 
-    const lumina_int16_t offset_x;
-    const lumina_int16_t offset_y;
+    const lumina_int16_t y_bearing;
 } lumina_font_glyph_data_t;
 
 typedef struct lumina_font_character_map_t

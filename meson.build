@@ -27,6 +27,8 @@ elif build_machine.system() == 'linux'
 endif
 
 lumina_sources = [
+  # 'fonts/montserrat_14.c',
+  # 'fonts/jetbrains_mono_14.c',
   'source/lumina_utf8.c',
   'source/lumina_text.c',
   'source/lumina_font.c',
@@ -46,7 +48,7 @@ lumina_dependency = declare_dependency(
   include_directories: lumina_include_directories, 
 )
 
-# lumina_exe = executable(
+# lumina_executable = executable(
 #   'lumina',
 #   sources: 'dev/main_win32.c',
 #   link_with: lumina_library,
