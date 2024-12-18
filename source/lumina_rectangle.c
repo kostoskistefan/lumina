@@ -56,6 +56,13 @@ void lumina_render_rectangle_outline(
     const lumina_color_t background_color
 )
 {
+    // TODO: The rectangles are drawn 1 pixel smaller than expected
+
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
     if (outer_corner_radius == 0)
     {
         lumina_fill_area(x, y, width + 1, 1, foreground_color);
@@ -183,6 +190,11 @@ void lumina_render_rectangle_filled(
     const lumina_color_t background_color
 )
 {
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
     if (corner_radius == 0)
     {
         lumina_fill_area(x, y, width + 1, height + 1, foreground_color);
@@ -207,7 +219,7 @@ void lumina_render_rectangle_filled(
 
         lumina_uint16_t cx;
 
-        for (cx = 0; cx <= corner_radius; ++cx)
+        for (cx = 0; cx < corner_radius; ++cx)
         {
             const lumina_uint16_t dx = corner_radius - cx;
             const lumina_uint16_t dx_squared = dx * dx;

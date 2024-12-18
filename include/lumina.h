@@ -26,6 +26,9 @@ extern "C" {
 #include "lumina_color.h"
 #include "lumina_circle.h"
 #include "lumina_rectangle.h"
+#include "lumina_label.h"
+#include "lumina_button.h"
+#include "lumina_toggle_button.h"
 
 // IWYU pragma: end_keep
 

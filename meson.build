@@ -11,7 +11,7 @@ project(
 
 cc = meson.get_compiler('c')
 
-lumina_include_directories = include_directories('include')
+lumina_include_directories = include_directories('include', 'include/widgets')
 
 lumina_dependencies = []
 
@@ -27,13 +27,18 @@ elif build_machine.system() == 'linux'
 endif
 
 lumina_sources = [
-  # 'fonts/montserrat_14.c',
-  # 'fonts/jetbrains_mono_14.c',
+  # 'fonts/roboto_14.c',
+  # 'fonts/roboto_20.c',
+
   'source/lumina_utf8.c',
   'source/lumina_text.c',
   'source/lumina_font.c',
   'source/lumina_color.c',
   'source/lumina_rectangle.c',
+
+  'source/widgets/lumina_label.c',
+  'source/widgets/lumina_button.c',
+  'source/widgets/lumina_toggle_button.c',
 ]
 
 lumina_library = library(

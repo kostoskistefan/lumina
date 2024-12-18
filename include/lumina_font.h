@@ -54,6 +54,8 @@ typedef struct lumina_font_character_map_t
 
 typedef struct lumina_font_t
 {
+    const lumina_uint8_t ascent;
+    const lumina_uint8_t descent;
     const lumina_uint8_t bits_per_pixel;
 
     const lumina_uint8_t *const bitmap;
