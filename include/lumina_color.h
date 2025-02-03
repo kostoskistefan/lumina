@@ -20,6 +20,12 @@ extern "C"
 
 #include "lumina_types.h"
 
+#define LUMINA_COLOR_BLACK 0x000000
+#define LUMINA_COLOR_WHITE 0xffffff
+#define LUMINA_COLOR_RED   0xff0000
+#define LUMINA_COLOR_GREEN 0x00ff00
+#define LUMINA_COLOR_BLUE  0x0000ff
+
 typedef lumina_uint32_t lumina_color_t;
 
 lumina_color_t lumina_color_mix(
