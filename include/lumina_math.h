@@ -19,6 +19,8 @@ extern "C" {
 
 #include <math.h>
 
+// TODO: Use typed macros
+
 #define lumina_math_abs(a)    ((a) < (0) ? -(a) : (a))
 #define lumina_math_min(a, b) ((a) < (b) ? (a) : (b))
 #define lumina_math_max(a, b) ((a) > (b) ? (a) : (b))
@@ -27,7 +29,11 @@ extern "C" {
 #define lumina_math_ceil(x) ceil(x)
 #define lumina_math_floor(x) floor(x)
 
+#define lumina_math_sqrt(x) sqrt((x))
+
 #define lumina_math_lerp(x, x1, y1, x2, y2) ((x1) + ((((x2) - (x1)) / (lumina_float_t) ((y2) - (y1))) * ((x) - (y1))));
+
+#define lumina_math_swap(x, y, T) do { T temp = x; x = y; y = temp; } while (0)
 
 #ifdef __cplusplus
 }
