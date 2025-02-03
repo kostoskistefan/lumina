@@ -20,7 +20,7 @@ extern "C" {
 #include "lumina_types.h"
 #include "lumina_color.h"
 
-void lumina_render_rectangle_outline(
+void lumina_rectangle_outline_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t width,
@@ -31,7 +31,7 @@ void lumina_render_rectangle_outline(
     const lumina_color_t background_color
 );
 
-void lumina_render_rectangle_filled(
+void lumina_rectangle_filled_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t width,
