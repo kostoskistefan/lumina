@@ -11,6 +11,7 @@ project(
 
 cc = meson.get_compiler('c')
 
+# lumina_include_directories = include_directories('include', 'include/widgets', 'dev')
 lumina_include_directories = include_directories('include', 'include/widgets')
 
 lumina_dependencies = []
@@ -23,21 +24,25 @@ elif build_machine.system() == 'linux'
   lumina_dependencies += [
     dependency('xcb'),
     dependency('xcb-image'),
+    cc.find_library('m'),
   ]
 endif
 
 lumina_sources = [
-  # 'fonts/roboto_14.c',
-  # 'fonts/roboto_20.c',
+  'fonts/roboto_14.c',
+  'fonts/roboto_20.c',
 
   'source/lumina_utf8.c',
   'source/lumina_text.c',
   'source/lumina_font.c',
+  'source/lumina_line.c',
   'source/lumina_color.c',
+  'source/lumina_triangle.c',
   'source/lumina_rectangle.c',
 
   'source/widgets/lumina_label.c',
   'source/widgets/lumina_button.c',
+  'source/widgets/lumina_spinbox.c',
   'source/widgets/lumina_toggle_button.c',
 ]
 
@@ -53,9 +58,23 @@ lumina_dependency = declare_dependency(
   include_directories: lumina_include_directories, 
 )
 
-# lumina_executable = executable(
+# lumina_executable_sources = [
+#   'dev/main.c',
+# ]
+
+# if build_machine.system() == 'windows'
+#   lumina_executable_sources += [
+#     'dev/window_win32.c',
+#   ]
+# elif build_machine.system() == 'linux'
+#   lumina_executable_sources += [
+#     'dev/window_linux.c',
+#   ]
+# endif
+
+# executable(
 #   'lumina',
-#   sources: 'dev/main_win32.c',
+#   sources: lumina_executable_sources,
 #   link_with: lumina_library,
 #   dependencies: lumina_dependency,
 #   include_directories: lumina_include_directories,

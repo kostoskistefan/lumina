@@ -1,14 +1,14 @@
 /**
-* @file:      lumina_label.h
-*
-* @date:      17 December 2024
-*
-* @author:    Kostoski Stefan
-*
-* @copyright: Copyright (c) 2024 Kostoski Stefan.
-*             This work is licensed under the terms of the MIT license.
-*             For a copy, see <https://opensource.org/license/MIT>.
-*/
+ * @file:      lumina_label.h
+ *
+ * @date:      02 February 2025
+ *
+ * @author:    Kostoski Stefan
+ *
+ * @copyright: Copyright (c) 2024 Kostoski Stefan.
+ *             This work is licensed under the terms of the MIT license.
+ *             For a copy, see <https://opensource.org/license/MIT>.
+ */
 
 #ifndef LUMINA_LABEL_H
 #define LUMINA_LABEL_H
@@ -19,28 +19,27 @@ extern "C"
 #endif
 
 #include "lumina_text.h"
-
-typedef struct lumina_label_style_t
-{
-    const lumina_text_style_t *text_style;
-    lumina_text_alignment_t text_alignment;
-} lumina_label_style_t;
+#include "lumina_font.h"
+#include "lumina_color.h"
+#include "lumina_types.h"
 
 typedef struct lumina_label_t
 {
+    const lumina_uint16_t x;
+    const lumina_uint16_t y;
+
     const lumina_char_t *text;
-    const lumina_label_style_t *style;
+    const lumina_font_t *const font;
+    const lumina_text_alignment_t text_alignment;
 
-    lumina_uint16_t _x;
-    lumina_uint16_t _y;
+    lumina_color_t text_color;
+    lumina_color_t background_color;
 
-    lumina_uint16_t _text_width;
-    lumina_uint16_t _x_alignment_offset;
+    lumina_uint16_t _width;
+    lumina_uint16_t _height;
 } lumina_label_t;
 
-void lumina_label_initialize(lumina_label_t *const label, const lumina_label_style_t *style);
-void lumina_label_set_text(lumina_label_t *const label, const lumina_char_t *text);
-void lumina_label_render(lumina_label_t *const label, const lumina_uint16_t x, const lumina_uint16_t y);
+void lumina_label_render(lumina_label_t *const label);
 
 #ifdef __cplusplus
 }

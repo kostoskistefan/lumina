@@ -1,7 +1,7 @@
 /**
  * @file:      lumina_toggle_button.c
  *
- * @date:      17 December 2024
+ * @date:      29 December 2024
  *
  * @author:    Kostoski Stefan
  *
@@ -11,91 +11,80 @@
  */
 
 #include "lumina_toggle_button.h"
-#include "lumina_rectangle.h"
 #include "lumina_math.h"
+#include "lumina_color.h"
+#include "lumina_rectangle.h"
+#include <stddef.h>
 
-void lumina_toggle_button_initialize(
-    lumina_toggle_button_t *const toggle_button,
-    const lumina_uint16_t x,
-    const lumina_uint16_t y,
-    const lumina_uint16_t width,
-    const lumina_uint16_t height,
-    const lumina_toggle_button_style_t *style,
-    void (*on_toggle)(const lumina_bool_t state, void *data),
-    void *data
-)
+void lumina_toggle_button_render(const lumina_toggle_button_t *const toggle_button)
 {
-    toggle_button->x = x;
-    toggle_button->y = y;
-    toggle_button->width = width;
-    toggle_button->height = height;
-    toggle_button->style = style;
-    toggle_button->is_active = false;
-    toggle_button->on_toggle = on_toggle;
-    toggle_button->data = data;
-}
+    const lumina_uint16_t min_side = lumina_math_min(toggle_button->width, toggle_button->height);
+    const lumina_uint16_t max_side = lumina_math_max(toggle_button->width, toggle_button->height);
+    const lumina_uint16_t knob_size = min_side - 5;
 
-void lumina_toggle_button_read(
-    lumina_toggle_button_t *const toggle_button,
-    const lumina_uint16_t x,
-    const lumina_uint16_t y
-)
-{
-    if (x >= toggle_button->x &&
-        y >= toggle_button->y &&
-        x <= toggle_button->x + toggle_button->width &&
-        y <= toggle_button->y + toggle_button->height)
+    lumina_uint16_t knob_offset = 2;
+    lumina_color_t background_color = toggle_button->inactive_color;
+
+    if (toggle_button->state == LUMINA_TOGGLE_BUTTON_STATE_ACTIVE)
     {
-        toggle_button->is_active = !toggle_button->is_active;
+        background_color = toggle_button->active_color;
+        knob_offset = max_side - knob_size - 3;
+    }
 
-        if (toggle_button->on_toggle != NULL)
-        {
-            toggle_button->on_toggle(toggle_button->is_active, toggle_button->data);
-        }
+    // Render the background
+    lumina_rectangle_filled_render(
+        toggle_button->x,
+        toggle_button->y,
+        toggle_button->width - 1,
+        toggle_button->height - 1,
+        toggle_button->corner_radius,
+        background_color,
+        toggle_button->compositing_color
+    );
+
+    // Render the knob
+    if (min_side == toggle_button->height)
+    {
+        lumina_rectangle_filled_render(
+            toggle_button->x + knob_offset,
+            toggle_button->y + 2,
+            knob_size,
+            knob_size,
+            toggle_button->corner_radius - 2,
+            toggle_button->knob_color,
+            background_color
+        );
+    }
+
+    else
+    {
+        lumina_rectangle_filled_render(
+            toggle_button->x + 2,
+            toggle_button->y + knob_offset,
+            knob_size,
+            knob_size,
+            toggle_button->corner_radius - 2,
+            toggle_button->knob_color,
+            background_color
+        );
     }
 }
 
-void lumina_toggle_button_render(lumina_toggle_button_t *const toggle_button)
+void lumina_toggle_button_event_handler(lumina_toggle_button_t *const toggle_button, const int x, const int y)
 {
-    if (toggle_button->style == NULL)
+    if (x < toggle_button->x ||
+        y < toggle_button->y ||
+        x > toggle_button->x + toggle_button->width - 1 ||
+        y > toggle_button->y + toggle_button->height - 1
+    )
     {
         return;
     }
 
-    lumina_color_t background_color = toggle_button->style->inactive_background_color;
-
-    if (toggle_button->is_active == true)
+    if (toggle_button->click_callback != NULL)
     {
-        background_color = toggle_button->style->active_background_color;
+        toggle_button->click_callback(toggle_button->state);
     }
 
-    lumina_render_rectangle_filled(
-        toggle_button->x,
-        toggle_button->y,
-        toggle_button->width,
-        toggle_button->height,
-        toggle_button->style->corner_radius,
-        background_color,
-        toggle_button->style->compositing_color
-    );
-
-    const lumina_uint16_t knob_size = toggle_button->height - 4;
-    const lumina_uint16_t corner_radius = lumina_math_max(0, toggle_button->style->corner_radius - 2);
-
-    lumina_uint16_t knob_x = toggle_button->x + 2;
-
-    if (toggle_button->is_active == true)
-    {
-        knob_x = toggle_button->x + toggle_button->width - knob_size - 2;
-    }
-
-    lumina_render_rectangle_filled(
-        knob_x,
-        toggle_button->y + 2,
-        knob_size,
-        knob_size,
-        corner_radius,
-        toggle_button->style->knob_color,
-        background_color
-    );
+    toggle_button->state = !toggle_button->state;
 }

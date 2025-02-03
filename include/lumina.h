@@ -21,13 +21,17 @@ extern "C" {
 
 #include "lumina_font.h"
 #include "lumina_text.h"
+#include "lumina_math.h"
 #include "lumina_line.h"
 #include "lumina_types.h"
 #include "lumina_color.h"
 #include "lumina_circle.h"
+#include "lumina_triangle.h"
 #include "lumina_rectangle.h"
+
 #include "lumina_label.h"
 #include "lumina_button.h"
+#include "lumina_spinbox.h"
 #include "lumina_toggle_button.h"
 
 // IWYU pragma: end_keep

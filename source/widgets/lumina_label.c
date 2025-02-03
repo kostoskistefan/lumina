@@ -1,7 +1,7 @@
 /**
  * @file:      lumina_label.c
  *
- * @date:      17 December 2024
+ * @date:      02 February 2025
  *
  * @author:    Kostoski Stefan
  *
@@ -13,84 +13,85 @@
 #include "lumina_label.h"
 #include "lumina_text.h"
 #include "lumina_rectangle.h"
-#include <stdio.h>
+#include <stddef.h>
 
-static void lumina_label_calculate_x_alignment_offset(lumina_label_t *const label);
-static void lumina_label_render_background(const lumina_label_t *const label);
-
-void lumina_label_initialize(
-    lumina_label_t *const label,
-    const lumina_label_style_t *style
-)
+static lumina_uint16_t lumina_label_get_alighment_offset(lumina_label_t *const label)
 {
-    label->_x = 0;
-    label->_y = 0;
-    label->text = NULL;
-    label->style = style;
-    label->_text_width = 0;
-    label->_x_alignment_offset = 0;
+    if (label->text_alignment == LUMINA_TEXT_ALIGNMENT_LEFT)
+    {
+        return 0;
+    }
+
+    lumina_int16_t alighment_offset = 0;
+
+    if (label->text_alignment == LUMINA_TEXT_ALIGNMENT_CENTER)
+    {
+        alighment_offset = label->_width >> 1;
+    }
+
+    else if (label->text_alignment == LUMINA_TEXT_ALIGNMENT_RIGHT)
+    {
+        alighment_offset = label->_width;
+    }
+
+    if (label->x < alighment_offset)
+    {
+        alighment_offset = label->x;
+    }
+
+    return alighment_offset;
 }
 
-void lumina_label_set_text(lumina_label_t *const label, const lumina_char_t *text)
+void lumina_label_render(lumina_label_t *const label)
 {
-    lumina_label_render_background(label);
-
-    label->text = text;
-
-    lumina_label_calculate_x_alignment_offset(label);
-}
-
-void lumina_label_render(lumina_label_t *const label, const lumina_uint16_t x, const lumina_uint16_t y)
-{
-    if (label->text == NULL)
+    if (label == NULL || label->text == NULL || label->font == NULL)
     {
         return;
     }
 
-    label->_x = x;
-    label->_y = y;
-
-    lumina_label_render_background(label);
-
-    lumina_render_text(
-        label->text,
-        label->_x,
-        label->_y,
-        label->style->text_alignment,
-        label->style->text_style
-    );
-}
-
-static void lumina_label_calculate_x_alignment_offset(lumina_label_t *const label)
-{
-    label->_text_width = lumina_text_get_width(label->text, label->style->text_style->font);
-
-    switch (label->style->text_alignment)
+    if (label->_width == 0)
     {
-        case LUMINA_TEXT_ALIGNMENT_LEFT:
-            label->_x_alignment_offset = 0;
-            break;
-
-        case LUMINA_TEXT_ALIGNMENT_CENTER:
-            label->_x_alignment_offset = (label->_text_width >> 1);
-            break;
-
-        case LUMINA_TEXT_ALIGNMENT_RIGHT:
-            label->_x_alignment_offset = label->_text_width;
-            break;
+        label->_width = lumina_text_get_width(label->text, label->font);
     }
-}
 
-static void lumina_label_render_background(const lumina_label_t *const label)
-{
-    lumina_render_rectangle_filled(
-        label->_x - label->_x_alignment_offset,
-        label->_y,
-        label->_text_width,
-        label->style->text_style->font->ascent + label->style->text_style->font->descent,
+    lumina_uint16_t alignment_offset = lumina_label_get_alighment_offset(label);
+
+    // Clear previous text
+    lumina_rectangle_filled_render(
+        label->x - alignment_offset,
+        label->y,
+        label->_width,
+        label->_height,
         0,
-        label->style->text_style->background_color,
-        label->style->text_style->background_color
+        label->background_color,
+        label->background_color
+    );
+
+    // Recalculate dimensions for new text
+    label->_width = lumina_text_get_width(label->text, label->font);
+    label->_height = label->font->ascent + label->font->descent;
+
+    alignment_offset = lumina_label_get_alighment_offset(label);
+
+    // Render background
+    lumina_rectangle_filled_render(
+        label->x - alignment_offset,
+        label->y,
+        label->_width,
+        label->_height,
+        0,
+        label->background_color,
+        label->background_color
+    );
+
+    // Render text
+    lumina_text_render(
+        label->text,
+        label->x,
+        label->y,
+        label->text_alignment,
+        label->font,
+        label->text_color,
+        label->background_color
     );
 }
-

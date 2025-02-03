@@ -1,7 +1,7 @@
 /**
  * @file:      lumina_toggle_button.h
  *
- * @date:      17 December 2024
+ * @date:      29 December 2024
  *
  * @author:    Kostoski Stefan
  *
@@ -19,52 +19,36 @@ extern "C"
 #endif
 
 #include "lumina_font.h"
-#include "lumina_types.h"
 #include "lumina_color.h"
+#include "lumina_types.h"
 
-typedef struct lumina_toggle_button_style_t
+typedef enum lumina_toggle_button_state_t
 {
-    lumina_uint8_t corner_radius;
-
-    lumina_color_t knob_color;
-    lumina_color_t active_background_color;
-    lumina_color_t inactive_background_color;
-    lumina_color_t compositing_color;
-} lumina_toggle_button_style_t;
+    LUMINA_TOGGLE_BUTTON_STATE_ACTIVE,
+    LUMINA_TOGGLE_BUTTON_STATE_INACTIVE
+} lumina_toggle_button_state_t;
 
 typedef struct lumina_toggle_button_t
 {
-    lumina_uint16_t x;
-    lumina_uint16_t y;
-    lumina_uint16_t width;
-    lumina_uint16_t height;
+    lumina_toggle_button_state_t state;
 
-    lumina_bool_t is_active;
+    const lumina_uint16_t x;
+    const lumina_uint16_t y;
+    const lumina_uint16_t width;
+    const lumina_uint16_t height;
 
-    const lumina_toggle_button_style_t *style;
+    const lumina_uint8_t corner_radius;
 
-    void *data;
-    void (*on_toggle)(const lumina_bool_t state, void *data);
+    lumina_color_t knob_color;
+    lumina_color_t active_color;
+    lumina_color_t inactive_color;
+    lumina_color_t compositing_color;
+
+    void (*click_callback)(const lumina_toggle_button_state_t state);
 } lumina_toggle_button_t;
 
-void lumina_toggle_button_initialize(
-    lumina_toggle_button_t *const toggle_button,
-    const lumina_uint16_t x,
-    const lumina_uint16_t y,
-    const lumina_uint16_t width,
-    const lumina_uint16_t height,
-    const lumina_toggle_button_style_t *style,
-    void (*on_toggle)(const lumina_bool_t state, void *data),
-    void *data
-);
-
-void lumina_toggle_button_render(lumina_toggle_button_t *const toggle_button);
-
-void lumina_toggle_button_read(
-    lumina_toggle_button_t *const toggle_button,
-    const lumina_uint16_t x,
-    const lumina_uint16_t y
-);
+void lumina_toggle_button_render(const lumina_toggle_button_t *const toggle_button);
+void lumina_toggle_button_event_handler(lumina_toggle_button_t *const toggle_button, const int x, const int y);
 
 #ifdef __cplusplus
 }

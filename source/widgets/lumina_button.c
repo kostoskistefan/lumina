@@ -1,7 +1,7 @@
 /**
  * @file:      lumina_button.c
  *
- * @date:      16 December 2024
+ * @date:      28 December 2024
  *
  * @author:    Kostoski Stefan
  *
@@ -13,69 +13,42 @@
 #include "lumina_button.h"
 #include "lumina_text.h"
 #include "lumina_rectangle.h"
+#include <stddef.h>
 
-void lumina_button_initialize(
-    lumina_button_t *const button,
-    const lumina_uint16_t x,
-    const lumina_uint16_t y,
-    const lumina_uint16_t width,
-    const lumina_uint16_t height,
-    const lumina_char_t *text,
-    const lumina_button_style_t *style,
-    void (*on_click)(void *data),
-    void *data
-)
+void lumina_button_render(const lumina_button_t *const button)
 {
-    button->x = x;
-    button->y = y;
-    button->width = width;
-    button->height = height;
-    button->text = text;
-    button->style = style;
-    button->on_click = on_click;
-    button->data = data;
-}
-
-void lumina_button_read(const lumina_button_t *const button, const lumina_uint16_t x, const lumina_uint16_t y)
-{
-    if (button->on_click == NULL)
-    {
-        return;
-    }
-
-    if (x >= button->x && x <= button->x + button->width && y >= button->y && y <= button->y + button->height)
-    {
-        button->on_click(button->data);
-    }
-}
-
-void lumina_button_render(lumina_button_t *const button)
-{
-    if (button->style == NULL)
-    {
-        return;
-    }
-
-    lumina_render_rectangle_filled(
+    lumina_rectangle_filled_render(
         button->x,
         button->y,
-        button->width,
-        button->height,
-        button->style->corner_radius,
-        button->style->background_color,
-        button->style->compositing_color
+        button->width - 1,
+        button->height - 1,
+        button->corner_radius,
+        button->background_color,
+        button->compositing_color
     );
 
-    if (button->text == NULL)
+    lumina_text_render(
+        button->text,
+        button->x + (button->width >> 1),
+        button->y + ((button->height - (button->font->ascent + button->font->descent)) >> 1),
+        LUMINA_TEXT_ALIGNMENT_CENTER,
+        button->font,
+        button->text_color,
+        button->background_color
+    );
+}
+
+void lumina_button_event_handler(lumina_button_t *const button, const int x, const int y)
+{
+    if (x < button->x ||
+        y < button->y ||
+        x > button->x + button->width - 1 ||
+        y > button->y + button->height - 1 ||
+        button->click_callback == NULL
+    )
     {
         return;
     }
 
-    lumina_render_text(
-        button->text,
-        button->x + (button->width >> 1),
-        button->y + ((button->height - (button->style->font->ascent + button->style->font->descent)) >> 1),
-        button->style->text_alignment,
-        (lumina_text_style_t *) button->style
-    );
+    button->click_callback();
 }
