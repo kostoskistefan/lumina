@@ -21,16 +21,16 @@ extern "C" {
 #include "lumina_color.h"
 #include "lumina_rectangle.h"
 
-static inline void lumina_render_circle_outline(
+static inline void lumina_circle_outline_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t outer_radius,
     const lumina_uint16_t inner_radius,
     const lumina_color_t foreground_color,
-    const lumina_color_t background_color
+    const lumina_color_t compositing_color
 )
 {
-    lumina_render_rectangle_outline(
+    lumina_rectangle_outline_render(
         x - outer_radius,
         y - outer_radius,
         outer_radius + outer_radius,
@@ -38,26 +38,26 @@ static inline void lumina_render_circle_outline(
         outer_radius,
         inner_radius,
         foreground_color,
-        background_color
+        compositing_color
     );
 }
 
-static inline void lumina_render_circle_filled(
+static inline void lumina_circle_filled_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t radius,
     const lumina_color_t foreground_color,
-    const lumina_color_t background_color
+    const lumina_color_t compositing_color
 )
 {
-    lumina_render_rectangle_filled(
+    lumina_rectangle_filled_render(
         x - radius,
         y - radius,
         radius + radius,
         radius + radius,
         radius,
         foreground_color,
-        background_color
+        compositing_color
     );
 }
 
