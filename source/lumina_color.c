@@ -12,7 +12,7 @@
 
 #include "lumina_color.h"
 
-lumina_color_t lumina_color_mix(const lumina_color_t color1, const lumina_color_t color2, const float amount)
+lumina_color_t lumina_color_mix(const lumina_color_t color1, const lumina_color_t color2, const lumina_float_t amount)
 {
     if (amount <= 0.0f)
     {
