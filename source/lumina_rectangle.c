@@ -45,7 +45,7 @@ static inline lumina_uint8_t sqrt_fraction(lumina_uint16_t number)
     return fpr >> osh;
 }
 
-void lumina_render_rectangle_outline(
+void lumina_rectangle_outline_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t width,
@@ -180,7 +180,7 @@ void lumina_render_rectangle_outline(
     lumina_fill_area(left_x, bottom_y, width_radius_offset + 1, radius_difference, foreground_color); // Bottom
 }
 
-void lumina_render_rectangle_filled(
+void lumina_rectangle_filled_render(
     const lumina_uint16_t x,
     const lumina_uint16_t y,
     const lumina_uint16_t width,
@@ -265,6 +265,6 @@ void lumina_render_rectangle_filled(
         left_x = x + cx;
 
         lumina_fill_area(left_x, y + cy, line_width, 1, foreground_color);
-        lumina_fill_area(left_x, y - cy + height, line_width, 1, foreground_color);
+        lumina_fill_area(left_x, y + height - cy, line_width, 1, foreground_color);
     }
 }
